@@ -61,9 +61,6 @@
   "functions": {
     "api/**/*.ts": {
       "maxDuration": 30
-    },
-    "api/speech/transcribe.ts": {
-      "maxDuration": 60
     }
   }
 }
