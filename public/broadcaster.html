@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FakeChat Broadcaster Console</title>
+    <link href="/static/broadcaster.css" rel="stylesheet" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="app-shell__header">
+        <div class="app-shell__header-content">
+          <div>
+            <p class="eyebrow">Control Center</p>
+            <h1>FakeChat Orchestrator</h1>
+            <p>Configure AI chatters, capture live audio, and inject instructions from one place.</p>
+          </div>
+          <nav class="app-shell__nav">
+            <a class="app-shell__nav-btn" href="/">Home</a>
+            <a class="app-shell__nav-btn" href="/view" target="_blank">Overlay</a>
+            <a class="app-shell__nav-btn" href="#broadcaster">Broadcaster</a>
+          </nav>
+        </div>
+      </header>
+
+      <div class="console-grid">
+        <section id="settings" class="console-panel">
+          <header class="panel-header">
+            <div>
+              <p class="eyebrow">AI Chatters</p>
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <h2>Configuration</h2>
+                <input
+                  type="text"
+                  id="settings-preset-name-input"
+                  class="preset-name-input"
+                  placeholder="Preset name..."
+                  maxlength="100"
+                  style="max-width: 200px;"
+                />
+                <button type="button" id="save-settings-preset-btn" class="btn btn--subtle">Save as preset</button>
+                <button type="button" id="load-settings-presets-btn" class="btn btn--subtle">Load presets</button>
+                <button type="button" id="overwrite-settings-preset-btn" class="btn btn--subtle" disabled style="display: none;">Overwrite preset</button>
+              </div>
+            </div>
+            <p class="panel-subtitle">
+              Control how many AI chatters join the conversation and tweak their tone.
+            </p>
+          </header>
+          <form id="settings-form" class="settings-card card" novalidate>
+            <div class="field-group">
+              <label class="field-label" for="numBots">Number of chatters</label>
+              <div class="field-control">
+                <input
+                  id="numBots"
+                  name="numBots"
+                  type="number"
+                  min="0"
+                  max="25"
+                  step="1"
+                  required
+                  inputmode="numeric"
+                  value="1"
+                />
+                <span class="field-hint">0 disables AI chatters. Maximum 25.</span>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="temperatureRange">Tone (temperature)</label>
+              <div class="field-control field-control--tone">
+                <input
+                  id="temperatureRange"
+                  type="range"
+                  min="0"
+                  max="2"
+                  step="0.05"
+                  aria-describedby="tone-description"
+                  value="0.8"
+                />
+                <input
+                  id="temperatureNumber"
+                  type="number"
+                  min="0"
+                  max="2"
+                  step="0.05"
+                  inputmode="decimal"
+                  value="0.8"
+                />
+              </div>
+              <p id="tone-description" class="field-hint">
+                <span id="tone-label">Balanced</span> · Higher values sound wilder; lower values stay safer.
+              </p>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="streamContext">Stream context</label>
+              <div class="field-control">
+                <textarea
+                  id="streamContext"
+                  name="streamContext"
+                  rows="4"
+                  maxlength="2000"
+                  spellcheck="true"
+                  placeholder="Set the scene for your stream so AI chatters stay grounded."
+                ></textarea>
+                <span class="field-hint">
+                  Describe the premise of the stream. Personas and bots will use this for additional context.
+                </span>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="promptBodyPositive">Prompt personalities</label>
+              <div class="prompt-grid">
+                <div class="prompt-card">
+                  <header class="prompt-card__header">
+                    <div class="prompt-card__heading">
+                      <h3>Positive persona</h3>
+                      <p class="prompt-card__description">Keeps the vibes upbeat, supportive, and energizing.</p>
+                    </div>
+                    <div class="prompt-weight">
+                      <label class="prompt-weight__label" for="promptWeightPositive">Weight</label>
+                      <div class="prompt-weight__controls">
+                        <input
+                          id="promptWeightPositive"
+                          type="number"
+                          min="0"
+                          max="100"
+                          step="1"
+                          inputmode="numeric"
+                          aria-describedby="promptWeightHint"
+                          value="50"
+                        />
+                        <span class="prompt-weight__suffix">%</span>
+                      </div>
+                    </div>
+                  </header>
+                  <div class="prompt-quick" data-template-slot="positive">
+                    <span class="prompt-quick__label">Quick templates</span>
+                    <div class="prompt-quick__chip-list" data-template-target="positive"></div>
+                  </div>
+                  <div class="history-pane history-pane--positive">
+                    <div class="history-pane__header">
+                      <span>Positive history</span>
+                      <span class="history-pane__hint">Click to load</span>
+                    </div>
+                    <div class="history-pill-list" data-history-target="positive"></div>
+                  </div>
+                  <textarea
+                    id="promptBodyPositive"
+                    rows="6"
+                    maxlength="2000"
+                    spellcheck="true"
+                  ></textarea>
+                </div>
+                <div class="prompt-card">
+                  <header class="prompt-card__header">
+                    <div class="prompt-card__heading">
+                      <h3>Negative persona</h3>
+                      <p class="prompt-card__description">Playfully roasts the chat with snarky, chaotic energy.</p>
+                    </div>
+                    <div class="prompt-weight">
+                      <label class="prompt-weight__label" for="promptWeightNegative">Weight</label>
+                      <div class="prompt-weight__controls">
+                        <input
+                          id="promptWeightNegative"
+                          type="number"
+                          min="0"
+                          max="100"
+                          step="1"
+                          inputmode="numeric"
+                          aria-describedby="promptWeightHint"
+                          value="50"
+                        />
+                        <span class="prompt-weight__suffix">%</span>
+                      </div>
+                    </div>
+                  </header>
+                  <div class="prompt-quick" data-template-slot="negative">
+                    <span class="prompt-quick__label">Quick templates</span>
+                    <div class="prompt-quick__chip-list" data-template-target="negative"></div>
+                  </div>
+                  <div class="history-pane history-pane--negative">
+                    <div class="history-pane__header">
+                      <span>Negative history</span>
+                      <span class="history-pane__hint">Click to load</span>
+                    </div>
+                    <div class="history-pill-list" data-history-target="negative"></div>
+                  </div>
+                  <textarea
+                    id="promptBodyNegative"
+                    rows="6"
+                    maxlength="2000"
+                    spellcheck="true"
+                  ></textarea>
+                </div>
+              </div>
+              <span id="promptWeightHint" class="field-hint"
+                >Weights always total 100%. Adjust one persona and the other updates automatically. With a single chatter active, only the positive persona is used.</span
+              >
+              <div class="prompt-actions">
+                <button type="button" id="save-prompts" class="btn btn--subtle">Save prompt changes</button>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button type="submit" class="btn btn--primary">Save settings</button>
+              <button type="button" id="refresh-settings" class="btn">Refresh</button>
+            </div>
+
+            <p class="status" id="settings-status" role="status" aria-live="polite"></p>
+          </form>
+
+          <section class="card">
+            <header class="section-header">
+              <h3>Active bot names</h3>
+            </header>
+            <div class="bot-names-container">
+              <ul id="bot-name-list" class="bot-names" aria-live="polite"></ul>
+              <div class="bot-names-actions">
+                <div class="bot-names-save">
+                  <input
+                    type="text"
+                    id="preset-name-input"
+                    class="preset-name-input"
+                    placeholder="Enter preset name..."
+                    maxlength="100"
+                  />
+                  <button type="button" id="save-preset-btn" class="btn btn--subtle">Save as preset</button>
+                </div>
+                <button type="button" id="load-presets-btn" class="btn btn--subtle">Load saved presets</button>
+              </div>
+              <div id="preset-modal" class="preset-modal" style="display: none;">
+                <div class="preset-modal__overlay"></div>
+                <div class="preset-modal__content">
+                  <header class="preset-modal__header">
+                    <h3>Saved Settings Presets</h3>
+                    <button type="button" class="preset-modal__close" id="preset-modal-close">&times;</button>
+                  </header>
+                  <div class="preset-modal__body">
+                    <ul id="preset-list" class="preset-list"></ul>
+                    <p id="preset-empty" class="preset-empty" style="display: none;">No saved presets yet.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <section id="broadcaster" class="console-panel">
+          <header class="panel-header">
+            <div>
+              <p class="eyebrow">Recorder</p>
+              <h2>Broadcaster Console</h2>
+            </div>
+            <p class="panel-subtitle">
+              Capture your mic, transcribe with Whisper, and push sentences to the overlay.
+            </p>
+          </header>
+          <section class="card">
+            <h3>Connection</h3>
+            <div class="controls">
+              <button id="record-btn" class="btn btn--primary">Start Recording</button>
+              <button id="stop-btn" class="btn btn--ghost" disabled>Stop</button>
+              <span id="connection-status" class="status status--idle">Idle</span>
+            </div>
+            <p class="hint">
+              Leave this window open while you record. We'll send each completed take to Whisper immediately.
+            </p>
+          </section>
+          <section class="card">
+            <h3>Chat Control</h3>
+            <div class="controls">
+              <button id="purge-chat-btn" class="btn btn--ghost">Purge Chat</button>
+              <span id="purge-status" class="status" role="status" aria-live="polite"></span>
+            </div>
+            <p class="hint">
+              Clear all chat history and active injections. Use this when resetting prompts to start fresh.
+            </p>
+          </section>
+          <section class="card card--logs">
+            <div class="card__header">
+              <h3>Live Transcript</h3>
+              <span id="pending-segment" class="pending">…</span>
+            </div>
+            <ol id="transcript-list" class="transcript-list"></ol>
+          </section>
+          <section class="card card--logs">
+            <div class="card__header">
+              <h3>Event Log</h3>
+              <button id="clear-log-btn" class="btn btn--ghost btn--small">Clear</button>
+            </div>
+            <pre id="event-log" class="event-log"></pre>
+          </section>
+        </section>
+
+        <section id="injection" class="console-panel">
+          <header class="panel-header">
+            <div>
+              <p class="eyebrow">Live steer</p>
+              <h2>Chat Injection</h2>
+            </div>
+            <p class="panel-subtitle">Drop instant instructions to steer the conversation.</p>
+          </header>
+
+          <section class="card">
+            <header class="injection-card__header">
+              <div>
+                <h3>Instruction</h3>
+                <p>Press Enter to send, Shift+Enter for a new line.</p>
+              </div>
+            </header>
+            <form id="injection-form" class="injection-form" autocomplete="off">
+              <label class="injection-form__label" for="injection-text">Guide the chat</label>
+              <textarea
+                id="injection-text"
+                class="injection-form__textarea"
+                rows="3"
+                placeholder="Type an instruction for the chat…"
+                spellcheck="true"
+                autofocus
+              ></textarea>
+              <div class="injection-timer-controls">
+                <label class="injection-timer-label" for="timer-limit-select">Persist duration</label>
+                <div class="injection-timer-inputs">
+                  <select id="timer-limit-select" class="injection-timer-select">
+                    <option value="30">30 seconds</option>
+                    <option value="60" selected>1 minute</option>
+                    <option value="120">2 minutes</option>
+                    <option value="300">5 minutes</option>
+                    <option value="600">10 minutes</option>
+                    <option value="custom">Custom</option>
+                  </select>
+                  <input
+                    type="text"
+                    id="timer-custom-input"
+                    class="injection-timer-custom"
+                    placeholder="M:SS"
+                    pattern="[0-9]+:[0-5][0-9]"
+                    style="display: none;"
+                  />
+                </div>
+              </div>
+              <div class="injection-actions">
+                <span id="injection-status" class="injection-status" role="status" aria-live="polite"></span>
+                <div class="injection-buttons">
+                  <button type="submit" class="injection-btn injection-btn--primary">Inject</button>
+                  <button type="button" id="persist-btn" class="injection-btn injection-btn--persist">Persist</button>
+                </div>
+              </div>
+            </form>
+          </section>
+
+          <section class="card">
+            <header class="injection-card__header">
+              <div>
+                <h3>Quick templates</h3>
+                <p>Tap to fill the instruction box instantly.</p>
+              </div>
+            </header>
+            <div class="injection-pills" id="template-pills"></div>
+          </section>
+        </section>
+      </div>
+    </main>
+    <script type="module" src="/static/broadcaster.js"></script>
+    <script type="module" src="/static/settings.js"></script>
+    <script type="module" src="/static/injection.js"></script>
+  </body>
+</html>
+

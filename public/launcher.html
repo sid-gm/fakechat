@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FakeChat Launcher</title>
+    <link rel="stylesheet" href="/static/launcher.css" />
+  </head>
+  <body>
+    <main class="launcher">
+      <header class="launcher__header">
+        <h1>FakeChat Dev Server Launcher</h1>
+        <p>Start the development server and open Chrome automatically.</p>
+        <p class="launcher__note">Note: This page must be accessed through the server (http://localhost:3000/launcher). If the server isn't running, use <code>npm run launch</code> or the <code>launch-dev.sh</code> script.</p>
+      </header>
+      <div class="launcher__content">
+        <button id="launch-btn" class="launch-btn">
+          <span class="launch-btn__text">Start Dev Server</span>
+          <span class="launch-btn__spinner" style="display: none;">⏳</span>
+        </button>
+        <div id="status" class="status" style="display: none;"></div>
+      </div>
+    </main>
+    <script>
+      const launchBtn = document.getElementById("launch-btn");
+      const statusDiv = document.getElementById("status");
+      const btnText = launchBtn.querySelector(".launch-btn__text");
+      const btnSpinner = launchBtn.querySelector(".launch-btn__spinner");
+
+      launchBtn.addEventListener("click", async () => {
+        // Disable button and show loading state
+        launchBtn.disabled = true;
+        btnText.style.display = "none";
+        btnSpinner.style.display = "inline-block";
+        statusDiv.style.display = "block";
+        statusDiv.className = "status status--loading";
+        statusDiv.textContent = "Starting dev server...";
+
+        try {
+          const response = await fetch("/launch", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            statusDiv.className = "status status--success";
+            statusDiv.textContent = data.message || "Success!";
+          } else {
+            statusDiv.className = "status status--error";
+            statusDiv.textContent = data.message || "Failed to launch server.";
+          }
+        } catch (error) {
+          statusDiv.className = "status status--error";
+          statusDiv.textContent = `Error: ${error instanceof Error ? error.message : String(error)}`;
+        } finally {
+          // Re-enable button
+          launchBtn.disabled = false;
+          btnText.style.display = "inline-block";
+          btnSpinner.style.display = "none";
+        }
+      });
+    </script>
+  </body>
+</html>
+

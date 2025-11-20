@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fake Chat Overlay</title>
+    <link rel="stylesheet" href="/static/view.css" />
+  </head>
+  <body>
+    <div id="chat-overlay" class="chat-overlay">
+      <button id="overlay-stop-btn" class="overlay-stop-btn" type="button" aria-label="Stop STT">
+        Stop
+      </button>
+      <ul id="chat-messages" class="chat-messages"></ul>
+    </div>
+    <div id="message-popup-overlay" class="message-popup-overlay" style="display: none;">
+      <div class="message-popup-backdrop"></div>
+      <div class="message-popup-content">
+        <button class="message-popup-close" aria-label="Close popup">×</button>
+        <div class="message-popup-username"></div>
+        <div class="message-popup-text"></div>
+      </div>
+    </div>
+    <script type="module" src="/static/view.js"></script>
+  </body>
+</html>
+

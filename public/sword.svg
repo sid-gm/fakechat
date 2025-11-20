@@ -1,0 +1,29 @@
+<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pixel art sword - Minecraft diamond sword style -->
+  <!-- Blade (cyan/teal) -->
+  <rect x="6" y="1" width="4" height="1" fill="#00CED1"/>
+  <rect x="5" y="2" width="6" height="1" fill="#00CED1"/>
+  <rect x="4" y="3" width="8" height="1" fill="#00CED1"/>
+  <rect x="3" y="4" width="10" height="1" fill="#00CED1"/>
+  <rect x="2" y="5" width="12" height="1" fill="#00CED1"/>
+  <rect x="1" y="6" width="14" height="1" fill="#00CED1"/>
+  <rect x="1" y="7" width="14" height="1" fill="#00CED1"/>
+  <rect x="2" y="8" width="12" height="1" fill="#00CED1"/>
+  <rect x="3" y="9" width="10" height="1" fill="#00CED1"/>
+  <rect x="4" y="10" width="8" height="1" fill="#00CED1"/>
+  <!-- Blade outline (darker teal) -->
+  <rect x="0" y="6" width="1" height="2" fill="#008B8B"/>
+  <rect x="15" y="6" width="1" height="2" fill="#008B8B"/>
+  <rect x="1" y="5" width="1" height="1" fill="#008B8B"/>
+  <rect x="14" y="5" width="1" height="1" fill="#008B8B"/>
+  <rect x="2" y="4" width="1" height="1" fill="#008B8B"/>
+  <rect x="13" y="4" width="1" height="1" fill="#008B8B"/>
+  <!-- Crossguard (darker teal/green) -->
+  <rect x="5" y="11" width="6" height="1" fill="#2F4F4F"/>
+  <rect x="4" y="12" width="8" height="1" fill="#2F4F4F"/>
+  <rect x="3" y="13" width="10" height="1" fill="#2F4F4F"/>
+  <!-- Handle (brown) -->
+  <rect x="6" y="14" width="4" height="1" fill="#8B4513"/>
+  <!-- Pommel (dark teal/green) -->
+  <rect x="7" y="15" width="2" height="1" fill="#2F4F4F"/>
+</svg>

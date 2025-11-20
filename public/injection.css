@@ -1,0 +1,222 @@
+.injection-app {
+  margin: 0;
+  min-height: 100vh;
+  padding: 2.5rem 1.5rem 3rem;
+  background: radial-gradient(circle at top left, #10172a, #05070f);
+  color: #f8fafc;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  display: grid;
+  gap: 2rem;
+}
+
+.injection-header {
+  display: flex;
+  justify-content: center;
+}
+
+.injection-header__content {
+  width: min(960px, 100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.injection-header h1 {
+  margin: 0;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  letter-spacing: -0.03em;
+}
+
+.injection-header p {
+  margin: 0.25rem 0 0;
+  color: rgba(241, 245, 249, 0.7);
+}
+
+.injection-header__nav {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.injection-header__nav-btn {
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.7);
+  color: #e2e8f0;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.injection-header__nav-btn:hover,
+.injection-header__nav-btn:focus-visible {
+  background: rgba(59, 130, 246, 0.2);
+  color: #f8fafc;
+  transform: translateY(-1px);
+}
+
+.injection-card {
+  margin: 0 auto;
+  width: min(720px, 100%);
+  padding: 1.75rem;
+  border-radius: 1.25rem;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.4);
+  display: grid;
+  gap: 1.25rem;
+}
+
+.injection-card__header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.injection-card__header p {
+  margin: 0.35rem 0 0;
+  color: rgba(226, 232, 240, 0.65);
+  font-size: 0.95rem;
+}
+
+.injection-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.injection-form__label {
+  font-weight: 500;
+  color: rgba(226, 232, 240, 0.9);
+}
+
+.injection-form__textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 120px;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.9);
+  padding: 1rem 1.1rem;
+  color: #f1f5f9;
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: border 160ms ease, box-shadow 160ms ease;
+}
+
+.injection-form__textarea:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.6);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+.injection-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.injection-status {
+  min-height: 1.25rem;
+  font-size: 0.95rem;
+  color: rgba(226, 232, 240, 0.8);
+}
+
+.injection-status[data-variant="error"] {
+  color: #fca5a5;
+}
+
+.injection-status[data-variant="success"] {
+  color: #86efac;
+}
+
+.injection-btn {
+  appearance: none;
+  border: none;
+  border-radius: 999px;
+  padding: 0.65rem 1.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+
+.injection-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.injection-btn--primary {
+  background: linear-gradient(145deg, #3b82f6, #1d4ed8);
+  color: #f8fafc;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.35);
+}
+
+.injection-btn--primary:hover:not(:disabled),
+.injection-btn--primary:focus-visible:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 30px rgba(59, 130, 246, 0.45);
+  filter: brightness(1.05);
+}
+
+.injection-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.injection-pill {
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(30, 41, 59, 0.8);
+  color: #e2e8f0;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.injection-pill:hover,
+.injection-pill:focus-visible {
+  background: rgba(59, 130, 246, 0.2);
+  transform: translateY(-1px);
+}
+
+.injection-pill:focus-visible,
+.injection-btn:focus-visible,
+.injection-header__nav-btn:focus-visible {
+  outline: 2px solid rgba(56, 189, 248, 0.9);
+  outline-offset: 2px;
+}
+
+@media (max-width: 720px) {
+  .injection-header__content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .injection-header__nav {
+    order: -1;
+    flex-wrap: wrap;
+  }
+
+  .injection-card {
+    padding: 1.5rem;
+  }
+
+  .injection-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .injection-btn--primary {
+    width: 100%;
+  }
+}
+
+
+
+
+
