@@ -971,7 +971,7 @@
         const allPresets = Array.isArray(fetchBody?.presets) ? fetchBody.presets : [];
         const presetData = allPresets.find((p) => p.id === presetId);
         
-        const response = await fetch("/settings/bot-names/load", {
+        const response = await fetch("/settings/bot-names", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -1017,7 +1017,7 @@
         const allPresets = Array.isArray(fetchBody?.presets) ? fetchBody.presets : [];
         const presetData = allPresets.find((p) => p.id === presetId);
 
-        const response = await fetch("/settings/presets/load", {
+        const response = await fetch("/settings/presets", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

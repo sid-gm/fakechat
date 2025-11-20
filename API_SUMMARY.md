@@ -562,3 +562,4 @@ These are server-side only, but iOS should be aware:
 7. **Error handling**: Handle network errors, API errors, and WebSocket disconnections gracefully
 
 
+
