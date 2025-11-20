@@ -3,23 +3,23 @@
   "rewrites": [
     {
       "source": "/static/(.*)",
-      "destination": "/public/$1"
+      "destination": "/$1"
     },
     {
       "source": "/view",
-      "destination": "/public/view.html"
+      "destination": "/view.html"
     },
     {
       "source": "/broadcaster",
-      "destination": "/public/broadcaster.html"
+      "destination": "/broadcaster.html"
     },
     {
       "source": "/launcher",
-      "destination": "/public/launcher.html"
+      "destination": "/launcher.html"
     },
     {
       "source": "/",
-      "destination": "/public/index.html"
+      "destination": "/index.html"
     }
   ],
   "headers": [
