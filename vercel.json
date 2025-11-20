@@ -1,29 +1,25 @@
 {
   "version": 2,
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "source": "/static/(.*)",
+      "destination": "/public/$1"
     },
     {
-      "src": "/static/(.*)",
-      "dest": "/public/$1"
+      "source": "/view",
+      "destination": "/public/view.html"
     },
     {
-      "src": "/view",
-      "dest": "/public/view.html"
+      "source": "/broadcaster",
+      "destination": "/public/broadcaster.html"
     },
     {
-      "src": "/broadcaster",
-      "dest": "/public/broadcaster.html"
+      "source": "/launcher",
+      "destination": "/public/launcher.html"
     },
     {
-      "src": "/launcher",
-      "dest": "/public/launcher.html"
-    },
-    {
-      "src": "/",
-      "dest": "/public/index.html"
+      "source": "/",
+      "destination": "/public/index.html"
     }
   ],
   "headers": [
