@@ -145,7 +145,9 @@ function renderIncomingMessage(rawMessage, { skipDuplicateCheck = false, skipScr
     return;
   }
 
-  if (message.role === "streamer") {
+  // Allow streamer messages to be displayed (for injection messages)
+  // Only filter out streamer messages if they're not from "Injection" username
+  if (message.role === "streamer" && message.username.toLowerCase() !== "injection") {
     return;
   }
 
