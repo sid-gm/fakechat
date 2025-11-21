@@ -6,6 +6,38 @@
       "destination": "/$1"
     },
     {
+      "source": "/injection",
+      "destination": "/api/injection"
+    },
+    {
+      "source": "/inject",
+      "destination": "/api/inject"
+    },
+    {
+      "source": "/realtime/transcript",
+      "destination": "/api/realtime/transcript"
+    },
+    {
+      "source": "/speech/transcribe",
+      "destination": "/api/speech/transcribe"
+    },
+    {
+      "source": "/chat/purge",
+      "destination": "/api/chat/purge"
+    },
+    {
+      "source": "/settings",
+      "destination": "/api/settings"
+    },
+    {
+      "source": "/settings/(.*)",
+      "destination": "/api/settings/$1"
+    },
+    {
+      "source": "/history/(.*)",
+      "destination": "/api/history/$1"
+    },
+    {
       "source": "/view",
       "destination": "/view.html"
     },
