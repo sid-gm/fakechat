@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FakeChat
 
-## Getting Started
+Overlay an AI-driven fake chat on top of your live recordings. The chat reacts to
+what you say (via your mic), and you steer it in real time — dial it from **savage**
+to **adoring**, fire off hype/roast/absurd bursts, or push an operator override that
+the bots must obey on their next lines.
 
-First, run the development server:
+Rebuilt as a Next.js webapp: **browser-native speech-to-text**, **Claude via the
+Vercel AI Gateway**, and a **realtime overlay** you can drop into OBS.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Architecture (client-as-brain)
+
+The control panel is the brain. It runs while you stream, so it owns the timing:
+
+```
+Control panel (browser)                Vercel (stateless)        Overlay (OBS / tab)
+ ├─ Web Speech API STT  ──────┐
+ ├─ sentiment + intensity     │  POST /api/generate
+ ├─ ambient chatter loop  ────┼──────────────►  AI Gateway → Claude Haiku 4.5 / Sonnet 5
+ └─ broadcasts messages ──────┘                       │
+                                                      ▼
+                              realtime channel  ◄──── returns one chat line
+                              (Supabase / BroadcastChannel)  ─────────────►  renders chat
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Video stage**: the panel composites your **camera or screen share** with the chat
+  overlaid in a corner (like a real Twitch layout) — no OBS needed to *see* the result.
+  Fullscreen it or open the chromeless `/stage` route to screen-record a clean 16:9 output.
+- **STT**: Web Speech API — interim transcripts as you talk, no upload (~0.3s). Chrome/Edge.
+- **LLM**: routed through the Vercel AI Gateway as `anthropic/claude-haiku-4.5`
+  (fast, default) or `anthropic/claude-sonnet-5` (richer). Swap the model live in the UI.
+- **Realtime**: Supabase Realtime *broadcast* when configured (cross-device, OBS), else
+  BroadcastChannel (same-browser, zero-config — good for dev and the in-panel preview).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Quick start
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+cp .env.example .env.local   # then fill in AI_GATEWAY_API_KEY (see below)
+npm run dev
+```
 
-## Learn More
+Open `http://localhost:3000` for the control panel. Flip **LIVE**, allow the mic,
+and talk — or use the **Say something** box / **Quick fire** buttons to test without
+a mic. The **⚡ Emotes** button and manual sends work with **no API key**.
 
-To learn more about Next.js, take a look at the following resources:
+### Enable AI replies
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Bots need the Vercel AI Gateway. Create a key at
+`https://vercel.com/[team]/~/ai-gateway/api-keys` and set it in `.env.local`:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```env
+AI_GATEWAY_API_KEY=your_key_here
+```
 
-## Deploy on Vercel
+(On a Vercel deployment this is provided automatically via OIDC — no key needed.)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Enable the OBS overlay (cross-device)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+BroadcastChannel only reaches tabs in the *same* browser, so OBS (a separate
+Chromium) needs a shared channel. Create a free Supabase project and set:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+```
+
+No database tables are required — we use Realtime *broadcast*. Then in OBS add a
+**Browser Source** pointing at the overlay URL shown in the panel
+(`/overlay?room=live`). The overlay background is transparent.
+
+## Deploy
+
+```bash
+npm i -g vercel && vercel        # preview
+vercel --prod                    # production
+```
+
+Set `AI_GATEWAY_API_KEY` (or rely on OIDC) and the two `NEXT_PUBLIC_SUPABASE_*`
+vars in the Vercel project. See `vercel:env` / `vercel deploy` for the flow.
+
+## Controls
+
+| Control | What it does |
+|---|---|
+| **Sentiment dial** | Re-weights bot personas from Savage → Neutral → Adoring |
+| **Intensity** | How chatty/reactive the room is (reply chance + ambient cadence) |
+| **Quick fire** | Instant Hype / Roast / Confused / Absurd bursts, or raw emote spam |
+| **Operator override** | A directive the bots must follow literally on their next lines |
+| **Model** | Haiku 4.5 (fast) ↔ Sonnet 5 (rich), live-switchable |
+| **Bots / Creativity / Stream context** | Room size, temperature, what you're doing |
+| **Video stage** | Camera / screen source, chat corner, fullscreen — the composited output |
+
+## Roadmap
+
+- Presets (save/load persona + sentiment configs) — port from the old SQLite model
+- Persist chat history to Supabase Postgres (currently ephemeral broadcast)
+- Streaming token-by-token rendering for a "typing" feel
+- Per-bot model assignment; more persona packs

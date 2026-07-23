@@ -3,15 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "setup:ca": "security find-certificate -a -p /System/Library/Keychains/SystemRootCertificates.keychain > .local-ca.pem 2>/dev/null; security find-certificate -a -p /Library/Keychains/System.keychain >> .local-ca.pem 2>/dev/null; echo 'wrote .local-ca.pem'",
+    "predev": "test -f .local-ca.pem || npm run setup:ca",
+    "dev": "NODE_EXTRA_CA_CERTS=./.local-ca.pem next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_EXTRA_CA_CERTS=./.local-ca.pem next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^4.0.18",
+    "@supabase/ssr": "^0.12.3",
+    "@supabase/supabase-js": "^2.110.8",
+    "ai": "^7.0.35",
     "next": "16.2.11",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
